@@ -4,7 +4,6 @@ import com.raywenderlich.favrwtutorials.logger
 import graphql.ExceptionWhileDataFetching
 import graphql.GraphQLError
 
-
 val playgroundErrorFormat: (GraphQLError.() -> Map<String, Any>) =  {
     val clientMessage = if (this is ExceptionWhileDataFetching) {
 
