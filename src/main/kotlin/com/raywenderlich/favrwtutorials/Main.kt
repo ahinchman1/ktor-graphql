@@ -33,6 +33,7 @@
  */
 package com.raywenderlich.favrwtutorials
 
+import com.raywenderlich.favrwtutorials.data.Database
 import com.ryanharter.ktor.moshi.moshi
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -51,9 +52,9 @@ import io.ktor.routing.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
-@KtorExperimentalLocationsAPI
-@Location("/graphql")
-data class GraphQLRequest(val query: String = "")
+val graphql by lazy {
+    GraphQLSchema(Database())
+}
 
 @KtorExperimentalLocationsAPI
 fun Application.module() {
@@ -72,7 +73,7 @@ fun Application.module() {
 
             logger.debug { "GraphQL query: $query" }
 
-            val response = schema.execute(query)
+            val response = graphql.schema.execute(query)
             if (response.isEmpty()) {
                 call.respond(HttpStatusCode.NotFound)
             } else {

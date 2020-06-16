@@ -1,5 +1,7 @@
 package com.raywenderlich.favrwtutorials.data
 
+import com.raywenderlich.favrwtutorials.data.models.AuthorId
+import com.raywenderlich.favrwtutorials.data.models.TutorialId
 import com.raywenderlich.favrwtutorials.logger
 import com.raywenderlich.favrwtutorials.sqldelight.raywenderlich.database.RayWenderlichDb
 import com.squareup.sqldelight.db.SqlDriver
@@ -29,7 +31,7 @@ class Database: RWStorage {
         TODO("Not yet implemented")
     }
 
-    override fun getTutorialAuthor(id: Int) {
+    override fun getTutorialAuthor(id: TutorialId): Author {
         TODO("Not yet implemented")
     }
 
@@ -41,7 +43,11 @@ class Database: RWStorage {
         TODO("Not yet implemented")
     }
 
-    override fun updateAuthorArticles(authorId: Int, articleId: Int) {
+    override fun getAuthorTutorials(id: AuthorId): List<Tutorial> {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateAuthorTutorials(authorId: AuthorId, tutorialId: TutorialId) {
         TODO("Not yet implemented")
     }
 

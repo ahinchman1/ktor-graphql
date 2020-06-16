@@ -5,7 +5,7 @@ import java.util.*
 
 typealias TutorialId = Int
 
-data class Tutorial(
+data class TutorialModel(
     val id: TutorialId,
     val title: String,
     val date: Date,
