@@ -33,11 +33,10 @@
  */
 package com.raywenderlich.favrwtutorials
 
+import com.github.pgutkowski.kgraphql.Context
 import com.raywenderlich.favrwtutorials.data.Database
 import com.ryanharter.ktor.moshi.moshi
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
+import io.ktor.application.*
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
@@ -51,13 +50,30 @@ import io.ktor.response.respondText
 import io.ktor.routing.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import kotlinx.coroutines.async
+import ktor.graphql.graphQL
+import mu.KotlinLogging
 
-val graphql by lazy {
-    GraphQLSchema(Database())
-}
+val logger by lazy { KotlinLogging.logger { } }
+val graphql by lazy { GraphQLSchema(Database()) }
 
 @KtorExperimentalLocationsAPI
 fun Application.module() {
+
+    routing {
+        intercept(ApplicationCallPipeline.Call) {
+            authenticate()
+        }
+
+        graphQL("/graphql", graphQLSchema) {
+            config {
+                context = getContext(call)
+                graphiql = true
+                formatError = formatErrorGraphQLError
+            }
+        }
+    }
+
     install(DefaultHeaders)
     install(CallLogging)
     install(ContentNegotiation) {
@@ -67,22 +83,41 @@ fun Application.module() {
         get("/") {
             call.respondText("Favorite Ray Wenderlich Tutorials", ContentType.Text.Html)
         }
-        post<GraphQLRequest>("/graphql") {
-            val request = call.receive<GraphQLRequest>()
-            val query = request.query
 
+        get("/REE") {
+            call.respondText("Favorite Ray Wenderlich Tutorials", ContentType.Text.Html)
+        }
+
+
+
+        post("/graphql/{query}") {
+            val query = call.parameters["query"] ?: ""
             logger.debug { "GraphQL query: $query" }
 
-            val response = graphql.schema.execute(query)
-            if (response.isEmpty()) {
+            if (query.isEmpty()) {
                 call.respond(HttpStatusCode.NotFound)
             } else {
-                call.respondText(response, ContentType.Application.Json)
+                val response = async {
+                     graphql.schema.execute(query)
+                }
+
+                if (response.await().isEmpty()) {
+                    call.respond(HttpStatusCode.NotFound)
+                } else {
+                    call.respondText(response.await(), ContentType.Application.Json)
+                }
             }
-
-
         }
     }
+}
+
+fun getContext(call: ApplicationCall): Context {
+    var account: Account? = null
+    if (call.attributes.contains(accountKey)) {
+        account = call.attributes[accountKey]
+    }
+
+    return Context(account)
 }
 
 @KtorExperimentalLocationsAPI
