@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.3.72"
 }
@@ -7,11 +9,11 @@ repositories {
     jcenter()
 }
 
-val ktor_version = "1.2.6"
+val ktorVersion = "1.3.2"
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
 
@@ -25,18 +27,19 @@ dependencies {
 
     implementation("com.ryanharter.ktor:ktor-moshi:1.0.1")
 
-    testImplementation("com.google.code.gson:gson:2.8.0")
     testImplementation("junit:junit:4.11")
-    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
+}
 
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
 }
 
 tasks.withType<Jar> {
     manifest {
         attributes("Main-Class" to "MainKt")
     }
-    baseName = "server"
 
     from(configurations.compile.get().map { if (it.isDirectory) it else zipTree(it) })
 }

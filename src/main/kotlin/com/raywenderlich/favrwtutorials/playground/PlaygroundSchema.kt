@@ -1,4 +1,37 @@
-package com.raywenderlich.favrwtutorials
+/*
+ * Copyright (c) 2020 Razeware LLC
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
+ * distribute, sublicense, create a derivative work, and/or sell copies of the
+ * Software in any work that is designed, intended, or marketed for pedagogical or
+ * instructional purposes related to programming, coding, application development,
+ * or information technology.  Permission for such use, copying, modification,
+ * merger, publication, distribution, sublicensing, creation of derivative works,
+ * or sale is expressly withheld.
+ *
+ * This project and source code may use libraries or frameworks that are
+ * released under various Open-Source licenses. Use of those libraries and
+ * frameworks are governed by their own individual licenses.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.raywenderlich.favrwtutorials.playground
 
 import com.raywenderlich.favrwtutorials.data.models.AuthorId
 import com.raywenderlich.favrwtutorials.data.models.Category
@@ -8,60 +41,23 @@ import com.raywenderlich.favrwtutorials.data.repository.Data.authors
 import com.raywenderlich.favrwtutorials.data.repository.Data.tutorials
 import com.raywenderlich.favrwtutorials.data.repository.TutorialRepository
 import com.raywenderlich.favrwtutorials.data.repository.yearMonthDateFormat
+import graphql.schema.GraphQLSchema
 import graphql.schema.idl.RuntimeWiring
 import graphql.schema.idl.SchemaGenerator
 import graphql.schema.idl.SchemaParser
 import graphql.schema.idl.TypeDefinitionRegistry
-import java.nio.file.Files
-import java.nio.file.Path
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
-private val parser = SchemaParser()
-
-fun schemaDef(path: Path): TypeDefinitionRegistry = parser.parse(Files.newBufferedReader(path))
-
-private val schemaDef = SchemaParser().parse("""
-
-type Query {
-    getTutorialAuthor(tutorialId: Int!): Author
+// Reads the graphql file in resources to load the schema
+val schemaDef: TypeDefinitionRegistry by lazy {
+    val classloader = Thread.currentThread().contextClassLoader
+    val bufferedReader = InputStreamReader(classloader.getResourceAsStream("rwtutorial.graphql")!!).apply { BufferedReader(this) }
+    SchemaParser().parse(bufferedReader)
 }
 
-type Mutation {
-
-	addTutorial(
-		id: Int!
-		title: String!
-        date: String!
-        authorId: Int!
-        category: Int!
-        url: String!
-	): Tutorial
-
-	updateAuthorTutorials(
-	    authorId: Int!
-	    tutorialId: Int!
-	): Tutorial
-}
-
-type Tutorial {
-	id: Int!
-	title: String!
-	date: String!
-	author: Author
-}
-
-type Author {
-	id: Int!
-	name: String!
-	tutorials: [Int]
-}
-
-schema {
-	query: Query
-	mutation: Mutation
-}
-""")
-
-var runtimeWiring = RuntimeWiring.newRuntimeWiring()
+// Wires expected behavior for GraphQL
+val runtimeWiring: RuntimeWiring = RuntimeWiring.newRuntimeWiring()
     .type("Query") { builder ->
         builder.dataFetcher("getTutorials") {
             TutorialRepository.getTutorials()
@@ -88,7 +84,7 @@ var runtimeWiring = RuntimeWiring.newRuntimeWiring()
             val title = env.getArgument<String>("title")
             val date = env.getArgument<String>("date")
             val authorId = env.getArgument<AuthorId>("authorId")
-            val category = Category.fromStorage(env.getArgument<Int>("category"))
+            val category = Category.fromStorage(env.getArgument("category"))
             val url = env.getArgument<String>("url")
 
             when {
@@ -106,8 +102,7 @@ var runtimeWiring = RuntimeWiring.newRuntimeWiring()
 
             TutorialRepository.addTutorial(tutorial)
         }
-    }
-    .build()
+    }.build()
 
 
-var graphQLSchema = SchemaGenerator().makeExecutableSchema(schemaDef, runtimeWiring)
+val graphQLSchema: GraphQLSchema = SchemaGenerator().makeExecutableSchema(schemaDef, runtimeWiring)

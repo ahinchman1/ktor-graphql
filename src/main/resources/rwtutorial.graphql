@@ -21,17 +21,18 @@ type Author {
 Queries
 """
 type Query {
-	getTutorials(): [Tutorial]
-    getTutorialAuthor(tutorialId: Int): Author
+	getTutorials: [Tutorial]!
+    getTutorialAuthor(tutorialId: Int!): Author
 
-	getAuthors(): [Author]
-    getAuthorTutorials(authorId: Int): [Tutorial]
+	getAuthors: [Author]!
+    getAuthorTutorials(authorId: Int!): [Tutorial]!
 }
 
 """
 Mutations
 """
-type Mutation{
+type Mutation {
+
 	addTutorial(
 		id: Int!
 		title: String!
@@ -40,12 +41,12 @@ type Mutation{
         category: Int!
         url: String!
 	): Tutorial
+
 	updateAuthorTutorials(
 	    authorId: Int!
 	    tutorialId: Int!
 	): Tutorial
 }
-
 
 schema {
 	query: Query

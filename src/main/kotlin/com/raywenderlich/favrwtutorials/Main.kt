@@ -33,6 +33,8 @@
  */
 package com.raywenderlich.favrwtutorials
 
+import com.raywenderlich.favrwtutorials.playground.graphQLSchema
+import com.raywenderlich.favrwtutorials.playground.playgroundErrorFormat
 import com.ryanharter.ktor.moshi.moshi
 import io.ktor.application.*
 import io.ktor.features.CallLogging
