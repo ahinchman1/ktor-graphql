@@ -33,94 +33,46 @@
  */
 package com.raywenderlich.favrwtutorials
 
-import com.github.pgutkowski.kgraphql.Context
-import com.raywenderlich.favrwtutorials.data.Database
 import com.ryanharter.ktor.moshi.moshi
 import io.ktor.application.*
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.request.receive
-import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import kotlinx.coroutines.async
+import ktor.graphql.config
 import ktor.graphql.graphQL
 import mu.KotlinLogging
 
 val logger by lazy { KotlinLogging.logger { } }
-val graphql by lazy { GraphQLSchema(Database()) }
+val graphql by lazy { //{ GraphQLSchema(TutorialRepository) }
+}
 
-@KtorExperimentalLocationsAPI
 fun Application.module() {
 
     routing {
-        intercept(ApplicationCallPipeline.Call) {
-            authenticate()
+        install(DefaultHeaders)
+        install(CallLogging)
+        install(ContentNegotiation) {
+            moshi()
         }
 
-        graphQL("/graphql", graphQLSchema) {
-            config {
-                context = getContext(call)
-                graphiql = true
-                formatError = formatErrorGraphQLError
-            }
-        }
-    }
-
-    install(DefaultHeaders)
-    install(CallLogging)
-    install(ContentNegotiation) {
-        moshi()
-    }
-    install(Routing) {
         get("/") {
-            call.respondText("Favorite Ray Wenderlich Tutorials", ContentType.Text.Html)
+            call.respondText("Favorite Ray Wenderlich Tutorials: Navigate to /graphiql to get started.", ContentType.Text.Html)
         }
 
-        get("/REE") {
-            call.respondText("Favorite Ray Wenderlich Tutorials", ContentType.Text.Html)
-        }
-
-
-
-        post("/graphql/{query}") {
-            val query = call.parameters["query"] ?: ""
-            logger.debug { "GraphQL query: $query" }
-
-            if (query.isEmpty()) {
-                call.respond(HttpStatusCode.NotFound)
-            } else {
-                val response = async {
-                     graphql.schema.execute(query)
-                }
-
-                if (response.await().isEmpty()) {
-                    call.respond(HttpStatusCode.NotFound)
-                } else {
-                    call.respondText(response.await(), ContentType.Application.Json)
-                }
+        graphQL("/graphiql", graphQLSchema) {
+            config {
+                graphiql = true
+                formatError = playgroundErrorFormat
             }
         }
     }
 }
 
-fun getContext(call: ApplicationCall): Context {
-    var account: Account? = null
-    if (call.attributes.contains(accountKey)) {
-        account = call.attributes[accountKey]
-    }
-
-    return Context(account)
-}
-
-@KtorExperimentalLocationsAPI
 fun main() {
     val server = embeddedServer(Netty, 8080, module = Application::module)
     server.start(wait = true)

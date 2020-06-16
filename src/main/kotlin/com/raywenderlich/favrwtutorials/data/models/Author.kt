@@ -5,8 +5,8 @@ import com.squareup.moshi.JsonClass
 typealias AuthorId = Int
 
 @JsonClass(generateAdapter = true)
-data class AuthorModel(
-    val authorId: AuthorId,
+data class Author(
+    val id: AuthorId,
     val name: String = "",
-    val articles: List<String> = listOf()
+    val tutorials: List<TutorialId> = listOf()
 )

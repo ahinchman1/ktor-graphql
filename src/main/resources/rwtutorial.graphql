@@ -1,0 +1,53 @@
+"""
+A Ray Wenderlich Tutorial blog
+"""
+type Tutorial {
+	id: Int!
+	title: String!
+	date: String!
+	author: Author
+}
+
+"""
+Ray Wenderlich Authors
+"""
+type Author {
+	id: Int!
+	name: String!
+	tutorials: [Int]
+}
+
+"""
+Queries
+"""
+type Query {
+	getTutorials(): [Tutorial]
+    getTutorialAuthor(tutorialId: Int): Author
+
+	getAuthors(): [Author]
+    getAuthorTutorials(authorId: Int): [Tutorial]
+}
+
+"""
+Mutations
+"""
+type Mutation{
+	addTutorial(
+		id: Int!
+		title: String!
+        date: String!
+        authorId: Int!
+        category: Int!
+        url: String!
+	): Tutorial
+	updateAuthorTutorials(
+	    authorId: Int!
+	    tutorialId: Int!
+	): Tutorial
+}
+
+
+schema {
+	query: Query
+	mutation: Mutation
+}
