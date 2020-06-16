@@ -1,17 +1,43 @@
 # KTOR TUTORIAL: USING GRAPHQL FOR MOBILE APIs
 ## SUMMARY
-This tutorial will use Ktor to build a server to build out a GraphQL API with the Kotlin DSL KGraphQL. 
-The aim of this article is to cover server development in Kotlin while examining the newest update in 
+This application is a small server holding data on favorite Ray Wenderlich articles.
+
+This tutorial will use Ktor to build a server to build out a GraphQL API and a playground to be able to explore 
+the schema we make. The aim of this article is to cover server development in Kotlin while examining the newest update in 
 the world of fetching data that is GraphQL.
 
 This project covers topics like
 - Ktor
-- GraphQL & REST
-- Building a Ktor client with GraphQL
-GraphQL Queries & Mutations
+- Building a Ktor server with GraphQL
+- GraphQL vs. REST
+- GraphQL Queries & Mutations
 
 ## Getting Started
-To get started ... TODO
+To get started, clone the project and hit "run" on `Application::main` to see the GraphiQL playground:
+
+![Alt Text](GraphiQL_Tutorials.png)
+
+## Using GraphiQL
+
+You can type queries on the left side of the GraphiQL playground to
+ retrieve data without a consumer. 
+ 
+ For example, to retrieve all tutorials available, you can write:
+ 
+ ```
+query {
+  getTutorials {
+    id
+    title
+    date
+    author {
+      id
+    }
+  }
+}
+``` 
+
+Explore the Documentation Explorer to try making your own queries!
 
 ## License
 ```

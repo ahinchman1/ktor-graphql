@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 val yearMonthDateFormat = SimpleDateFormat("MM/d/yyyy", Locale.US)
-fun String.toDate(): Date? = yearMonthDateFormat.parse(this)
 
 object Data {
     var authors: List<Author> = createAuthors()

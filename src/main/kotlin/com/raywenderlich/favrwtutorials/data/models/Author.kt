@@ -8,5 +8,5 @@ typealias AuthorId = Int
 data class Author(
     val id: AuthorId,
     val name: String = "",
-    val tutorials: List<TutorialId> = listOf()
+    var tutorials: List<TutorialId> = listOf()
 )

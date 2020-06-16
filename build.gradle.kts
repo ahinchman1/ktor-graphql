@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.72"
+    application
 }
 
 repositories {
@@ -42,4 +43,8 @@ tasks.withType<Jar> {
     }
 
     from(configurations.compile.get().map { if (it.isDirectory) it else zipTree(it) })
+}
+
+application {
+    mainClassName = "com.ray.wenderlich.favrwtutorials.MainKt"
 }

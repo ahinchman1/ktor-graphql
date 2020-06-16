@@ -23,5 +23,5 @@ interface RWStorage {
     fun getAuthorTutorials(id: AuthorId): List<Tutorial>
 
     // Adds a new tutorial to the list of tutorials a particular author writes
-    // fun updateAuthorTutorials(authorId: AuthorId, tutorialId: TutorialId)
+    fun updateAuthorTutorials(authorId: AuthorId, tutorialId: TutorialId)
 }

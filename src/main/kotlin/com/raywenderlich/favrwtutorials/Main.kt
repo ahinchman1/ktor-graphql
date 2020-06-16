@@ -50,8 +50,6 @@ import ktor.graphql.graphQL
 import mu.KotlinLogging
 
 val logger by lazy { KotlinLogging.logger { } }
-val graphql by lazy { //{ GraphQLSchema(TutorialRepository) }
-}
 
 fun Application.module() {
 
