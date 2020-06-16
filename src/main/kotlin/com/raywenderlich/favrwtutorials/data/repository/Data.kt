@@ -38,7 +38,7 @@ private fun createTutorials() =
             id = 1,
             title = "Elegant Networking in Flutter with Chopper",
             date = yearMonthDateFormat.parse("6/9/2020"),
-            author = 0,
+            authorId = 0,
             category = Category.FLUTTER,
             url = "https://www.raywenderlich.com/10099546-elegant-networking-in-flutter-with-chopper"
         ),
@@ -46,7 +46,7 @@ private fun createTutorials() =
             id = 2,
             title = "Live Templates in Android Studio: Getting Started",
             date = yearMonthDateFormat.parse("11/2/2019"),
-            author = 1,
+            authorId = 1,
             category = Category.ANDROID_AND_KOTLIN,
             url = "https://www.raywenderlich.com/4979242-live-templates-in-android-studio-getting-started"
         ),
@@ -54,7 +54,7 @@ private fun createTutorials() =
             id = 3,
             title = "Espresso Testing and Screen Robots: Getting Started",
             date = yearMonthDateFormat.parse("2/27/2019"),
-            author = 1,
+            authorId = 1,
             category = Category.ANDROID_AND_KOTLIN,
             url = "https://www.raywenderlich.com/949489-espresso-testing-and-screen-robots-getting-started"
         ),
@@ -62,7 +62,7 @@ private fun createTutorials() =
             id = 4,
             title = "Routing with MapKit and Core Location",
             date = yearMonthDateFormat.parse("6/5/2020"),
-            author = 3,
+            authorId = 3,
             category = Category.IOS_AND_KOTLIN,
             url = "https://www.raywenderlich.com/10028489-routing-with-mapkit-and-core-location"
         )

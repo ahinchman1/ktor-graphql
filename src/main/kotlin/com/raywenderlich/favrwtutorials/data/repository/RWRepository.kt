@@ -1,11 +1,9 @@
 package com.raywenderlich.favrwtutorials.data.repository
 
-import com.raywenderlich.favrwtutorials.data.models.Author
-import com.raywenderlich.favrwtutorials.data.models.AuthorId
-import com.raywenderlich.favrwtutorials.data.models.Tutorial
-import com.raywenderlich.favrwtutorials.data.models.TutorialId
+import com.raywenderlich.favrwtutorials.data.models.*
+import java.util.*
 
-interface RWStorage {
+interface RWRepository {
 
     // Gets all saved Ray Wenderlich tutorials.
     fun getTutorials(): List<Tutorial>
@@ -13,8 +11,15 @@ interface RWStorage {
     // Gets the author associated with a particular tutorial.
     fun getTutorialAuthor(id: TutorialId): Author?
 
-    // Gets the author of a particular tutorial's information.
-    fun addTutorial(tutorial: Tutorial)
+    // Adds a tutorial
+    fun addTutorial(
+        id: TutorialId,
+        title: String,
+        date: Date,
+        authorId: AuthorId,
+        category: Category,
+        url: String?
+    ): Tutorial
 
     // Gets all of the saved Ray Wenderlich authors.
     fun getAuthors(): List<Author>

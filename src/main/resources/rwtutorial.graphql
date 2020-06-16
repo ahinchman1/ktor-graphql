@@ -1,20 +1,36 @@
 """
-A Ray Wenderlich Tutorial blog
+A Ray Wenderlich Tutorials, Authors and Categories
 """
 type Tutorial {
 	id: Int!
 	title: String!
 	date: String!
-	author: Author
+	authorId: Int!
+	category: Category!
+	url: String
 }
 
-"""
-Ray Wenderlich Authors
-"""
 type Author {
 	id: Int!
 	name: String!
 	tutorials: [Int]
+}
+
+input TutorialInput {
+	id: Int!
+	title: String!
+	date: String!
+	authorId: Int!
+	category: Category!
+	url: String
+}
+
+enum Category {
+      IOS_AND_KOTLIN,
+      ANDROID_AND_KOTLIN,
+      SERVER_SIDE_SWIFT,
+      UNITY,
+      FLUTTER
 }
 
 """
@@ -32,20 +48,7 @@ type Query {
 Mutations
 """
 type Mutation {
-
-	addTutorial(
-		id: Int!
-		title: String!
-        date: String!
-        authorId: Int!
-        category: Int!
-        url: String!
-	): Tutorial
-
-	updateAuthorTutorials(
-	    authorId: Int!
-	    tutorialId: Int!
-	): Tutorial
+	addTutorial(input: TutorialInput): Tutorial
 }
 
 schema {

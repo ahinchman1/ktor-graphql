@@ -3,8 +3,9 @@ package com.raywenderlich.favrwtutorials.data.repository
 import com.raywenderlich.favrwtutorials.data.models.*
 import com.raywenderlich.favrwtutorials.data.repository.Data.authors
 import com.raywenderlich.favrwtutorials.data.repository.Data.tutorials
+import java.util.*
 
-object TutorialRepository: RWStorage {
+object Resolvers: RWRepository {
 
     override fun getTutorials(): List<Tutorial> {
         return tutorials
@@ -14,8 +15,24 @@ object TutorialRepository: RWStorage {
         return authors.firstOrNull() { author -> author.tutorials.contains(id) }
     }
 
-    override fun addTutorial(tutorial: Tutorial) {
-        tutorials = tutorials.plus(tutorial)
+    override fun addTutorial(
+        id: TutorialId,
+        title: String,
+        date: Date,
+        authorId: AuthorId,
+        category: Category,
+        url: String?
+    ): Tutorial {
+        val tut = Tutorial(
+            id = id,
+            title = title,
+            date = date,
+            authorId = id,
+            category = category,
+            url = url
+        )
+        tutorials = tutorials.plus(tut)
+        return tut
     }
 
     override fun getAuthors(): List<Author> {

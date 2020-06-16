@@ -15,7 +15,7 @@ This project covers topics like
 ## Getting Started
 To get started, clone the project and hit "run" on `Application::main` to see the GraphiQL playground:
 
-![Alt Text](GraphiQL_Tutorials.png)
+![Alt Text](graphiql_playground.png)
 
 ## Using GraphiQL
 
@@ -36,8 +36,76 @@ query {
   }
 }
 ``` 
+### Variables
+
+Queries that require arguments are a bit more involved, but query variables can be used in GraphiQL like so:
+
+![Alt Text](getTutorialAuthor.png)
+
+
+The query itself allows for the argument fields to be dynamically passed in:
+
+```
+query GetTutorialAuthor($tutorialId: Int = 2) {
+  getTutorialAuthor(tutorialId: $tutorialId) {
+    name
+  }
+}
+```
 
 Explore the Documentation Explorer to try making your own queries!
+
+### Mutations
+
+Mutations are how GraphQL is able to add data and update. Below is a 
+demo of adding a Tutorial object to be saved in memory:
+
+![Alt Text](mutation1.png)
+
+We can start with checking the existing tutorials to make sure the new tutorial id will
+not clash with another.
+
+```
+query {
+  getTutorials{
+    id
+    title
+    url
+  }
+}
+```
+
+![Alt Text](mutation2.png)
+
+Using the InputType, we can put in the following mutation:
+
+```
+mutation createTutorial($input: TutorialInput) {
+  addTutorial(input: $input) {
+    title
+    category
+  }
+}
+```
+
+In the variables box, we insert our input:
+
+```
+{
+  "input": {
+    "id": 5,
+    "title": "Game engines with Unity",
+    "date": "01/24/95",
+    "authorId": 1,
+    "category": "UNITY"
+  }
+}
+```
+
+To check if this new tutorial has been created and inserted, we can 
+query for all tutorials one more time:
+
+![Alt Text](mutation3.png)
 
 ## License
 ```

@@ -10,7 +10,7 @@ data class Tutorial(
     val id: TutorialId,
     val title: String,
     val date: Date,
-    val author: AuthorId,
+    val authorId: AuthorId,
     val category: Category,
-    val url: String
+    val url: String?
 )

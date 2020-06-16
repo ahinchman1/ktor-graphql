@@ -39,7 +39,7 @@ import com.raywenderlich.favrwtutorials.data.models.Tutorial
 import com.raywenderlich.favrwtutorials.data.models.TutorialId
 import com.raywenderlich.favrwtutorials.data.repository.Data.authors
 import com.raywenderlich.favrwtutorials.data.repository.Data.tutorials
-import com.raywenderlich.favrwtutorials.data.repository.TutorialRepository
+import com.raywenderlich.favrwtutorials.data.repository.Resolvers
 import com.raywenderlich.favrwtutorials.data.repository.yearMonthDateFormat
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.RuntimeWiring
@@ -48,6 +48,8 @@ import graphql.schema.idl.SchemaParser
 import graphql.schema.idl.TypeDefinitionRegistry
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.*
+import kotlin.collections.LinkedHashMap
 
 // Reads the graphql file in resources to load the schema
 val schemaDef: TypeDefinitionRegistry by lazy {
@@ -60,47 +62,43 @@ val schemaDef: TypeDefinitionRegistry by lazy {
 val runtimeWiring: RuntimeWiring = RuntimeWiring.newRuntimeWiring()
     .type("Query") { builder ->
         builder.dataFetcher("getTutorials") {
-            TutorialRepository.getTutorials()
+            Resolvers.getTutorials()
         }
 
         builder.dataFetcher("getTutorialAuthor") { env ->
             val tutorialId = env.getArgument<TutorialId>("tutorialId")
-            TutorialRepository.getAuthorTutorials(tutorialId)
+            Resolvers.getTutorialAuthor(tutorialId)
         }
 
         builder.dataFetcher("getAuthors") {
-            TutorialRepository.getAuthors()
+            Resolvers.getAuthors()
         }
 
         builder.dataFetcher("getAuthorTutorials") { env ->
             val authorId = env.getArgument<AuthorId>("authorId")
-            TutorialRepository.getAuthorTutorials(authorId)
+            Resolvers.getAuthorTutorials(authorId)
         }
     }
     .type("Mutation") { builder ->
         builder.dataFetcher("addTutorial") { env ->
-            val name = env.getArgument<String>("name")
-            val id = env.getArgument<TutorialId>("id")
-            val title = env.getArgument<String>("title")
-            val date = env.getArgument<String>("date")
-            val authorId = env.getArgument<AuthorId>("authorId")
-            val category = Category.fromStorage(env.getArgument("category"))
-            val url = env.getArgument<String>("url")
+            val input = (env.arguments.get("input") as LinkedHashMap<*, *>)
+            val id = input["id"] as TutorialId
+            val title = input["title"] as String
+            val date = input["date"] as String
+            val authorId = input["authorId"] as AuthorId
+            val category = Category.fromStorage(input["category"] as String)
+            val url = input["url"] as? String
 
             when {
-                name.isNullOrEmpty() ->  throw Exception("You must specify a non-empty name.")
                 id == null -> throw Exception("You must specify a non-empty id.")
                 tutorials.firstOrNull { id == it.id } != null -> throw Exception("Tutorial id already exists. Please use a different one.")
                 title.isNullOrEmpty() -> throw Exception("You must specify a non-empty title.")
                 yearMonthDateFormat.parse(date) == null -> throw Exception("Unable to parse date $date for the format 'MM/d/yyyy'")
                 authorId == null -> throw Exception("You must specify a non-empty name")
                 authors.firstOrNull { authorId == it.id } == null -> throw Exception("Author id does not exist. Please check to make sure the proper author id is being used.")
-                url.isNullOrEmpty() ->  throw Exception("You must specify a non-empty id.")
             }
 
-            val tutorial = Tutorial(id, title, yearMonthDateFormat.parse(date)!!, authorId, category, url)
-
-            TutorialRepository.addTutorial(tutorial)
+            Resolvers.addTutorial(id, title, yearMonthDateFormat.parse(date)!!, authorId, category, url)
         }
     }.build()
 
