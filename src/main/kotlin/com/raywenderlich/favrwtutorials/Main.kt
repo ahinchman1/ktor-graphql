@@ -31,31 +31,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.raywenderlich.favoriterwtutorials
+package com.raywenderlich.favrwtutorials
 
+import com.ryanharter.ktor.moshi.moshi
+import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.CallLogging
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.locations.Location
+import io.ktor.request.receive
+import io.ktor.response.respond
 import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
-import io.ktor.routing.routing
+import io.ktor.routing.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
-fun main() {
-    val server = embeddedServer(Netty, 8080) {
-        routing {
-            get("/") {
-                call.respondText("Favorite Ray Wenderlich Tutorials", ContentType.Text.Html)
+@KtorExperimentalLocationsAPI
+@Location("/graphql")
+data class GraphQLRequest(val query: String = "")
+
+@KtorExperimentalLocationsAPI
+fun Application.module() {
+    install(DefaultHeaders)
+    install(CallLogging)
+    install(ContentNegotiation) {
+        moshi()
+    }
+    install(Routing) {
+        get("/") {
+            call.respondText("Favorite Ray Wenderlich Tutorials", ContentType.Text.Html)
+        }
+        post<GraphQLRequest>("/graphql") {
+            val request = call.receive<GraphQLRequest>()
+            val query = request.query
+
+            logger.debug { "GraphQL query: $query" }
+
+            val response = schema.execute(query)
+            if (response.isEmpty()) {
+                call.respond(HttpStatusCode.NotFound)
+            } else {
+                call.respondText(response, ContentType.Application.Json)
             }
-            route("/graphql") {
-                post {
-                    // graphql route to handle queries and mutations
-                }
-            }
+
+
         }
     }
+}
 
+@KtorExperimentalLocationsAPI
+fun main() {
+    val server = embeddedServer(Netty, 8080, module = Application::module)
     server.start(wait = true)
 }
