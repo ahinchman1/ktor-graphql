@@ -16,15 +16,6 @@ type Author {
 	tutorials: [Int]
 }
 
-input TutorialInput {
-	id: Int!
-	title: String!
-	date: String!
-	authorId: Int!
-	category: Category!
-	url: String
-}
-
 enum Category {
       IOS_AND_KOTLIN,
       ANDROID_AND_KOTLIN,
@@ -39,9 +30,6 @@ Queries
 type Query {
 	getTutorials: [Tutorial]!
     getTutorialAuthor(tutorialId: Int!): Author
-
-	getAuthors: [Author]!
-    getAuthorTutorials(authorId: Int!): [Tutorial]!
 }
 
 """

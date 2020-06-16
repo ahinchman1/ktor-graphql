@@ -33,13 +33,8 @@
  */
 package com.raywenderlich.favrwtutorials.playground
 
-import com.raywenderlich.favrwtutorials.data.models.AuthorId
-import com.raywenderlich.favrwtutorials.data.models.Category
 import com.raywenderlich.favrwtutorials.data.models.TutorialId
-import com.raywenderlich.favrwtutorials.data.repository.Data.authors
-import com.raywenderlich.favrwtutorials.data.repository.Data.tutorials
 import com.raywenderlich.favrwtutorials.data.repository.Resolvers
-import com.raywenderlich.favrwtutorials.data.repository.yearMonthDateFormat
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.RuntimeWiring
 import graphql.schema.idl.SchemaGenerator
@@ -47,7 +42,6 @@ import graphql.schema.idl.SchemaParser
 import graphql.schema.idl.TypeDefinitionRegistry
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import kotlin.collections.LinkedHashMap
 
 // Reads the graphql file in resources to load the schema
 val schemaDef: TypeDefinitionRegistry by lazy {
@@ -66,38 +60,6 @@ val runtimeWiring: RuntimeWiring = RuntimeWiring.newRuntimeWiring()
         builder.dataFetcher("getTutorialAuthor") { env ->
             val tutorialId = env.getArgument<TutorialId>("tutorialId")
             Resolvers.getTutorialAuthor(tutorialId)
-        }
-
-        builder.dataFetcher("getAuthors") {
-            Resolvers.getAuthors()
-        }
-
-        builder.dataFetcher("getAuthorTutorials") { env ->
-            val authorId = env.getArgument<AuthorId>("authorId")
-            Resolvers.getAuthorTutorials(authorId)
-        }
-    }
-    .type("Mutation") { builder ->
-        builder.dataFetcher("addTutorial") { env ->
-            val input = (env.arguments.get("input") as LinkedHashMap<*, *>)
-            val id = input["id"] as? TutorialId
-            val title = input["title"] as? String
-            val date = input["date"] as? String
-            val authorId = input["authorId"] as? AuthorId
-            val category = Category.fromStorage(input["category"] as? String ?: "")
-            val url = input["url"] as? String
-
-            when {
-                id == null -> throw Exception("You must specify a non-empty id.")
-                tutorials.firstOrNull { id == it.id } != null -> throw Exception("Tutorial id already exists. Please use a different one.")
-                title.isNullOrEmpty() -> throw Exception("You must specify a non-empty title.")
-                yearMonthDateFormat.parse(date) == null -> throw Exception("Unable to parse date $date for the format 'MM/d/yyyy'")
-                authorId == null -> throw Exception("You must specify a non-empty name")
-                authors.firstOrNull { authorId == it.id } == null -> throw Exception("Author id does not exist. Please check to make sure the proper author id is being used.")
-                else -> Resolvers.addTutorial(id, title, yearMonthDateFormat.parse(date)!!, authorId, category, url)
-            }
-
-
         }
     }.build()
 

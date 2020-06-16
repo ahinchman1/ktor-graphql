@@ -33,47 +33,23 @@
  */
 package com.raywenderlich.favrwtutorials
 
-import com.raywenderlich.favrwtutorials.playground.graphQLSchema
-import com.raywenderlich.favrwtutorials.playground.playgroundErrorFormat
-import com.ryanharter.ktor.moshi.moshi
 import io.ktor.application.*
-import io.ktor.features.CallLogging
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
 import io.ktor.http.ContentType
 import io.ktor.response.respondText
 import io.ktor.routing.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import ktor.graphql.config
-import ktor.graphql.graphQL
 import mu.KotlinLogging
 
 val logger by lazy { KotlinLogging.logger { } }
 
-fun Application.module() {
-
-    routing {
-        install(DefaultHeaders)
-        install(CallLogging)
-        install(ContentNegotiation) {
-            moshi()
-        }
-
-        get("/") {
-            call.respondText("Favorite Ray Wenderlich Tutorials: Navigate to /graphiql to get started.", ContentType.Text.Html)
-        }
-
-        graphQL("/graphiql", graphQLSchema) {
-            config {
-                graphiql = true
-                formatError = playgroundErrorFormat
+fun main() {
+    val server = embeddedServer(Netty, port = 8080) {
+        routing {
+            get("/") {
+                call.respondText("Favorite Ray Wenderlich Tutorials: Navigate to /graphiql to get started.", ContentType.Text.Html)
             }
         }
     }
-}
-
-fun main() {
-    val server = embeddedServer(Netty, 8080, module = Application::module)
     server.start(wait = true)
 }
