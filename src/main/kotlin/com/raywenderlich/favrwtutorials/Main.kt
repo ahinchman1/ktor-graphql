@@ -55,10 +55,6 @@ fun Application.module() {
 
     routing {
         install(DefaultHeaders)
-        install(CallLogging)
-        install(ContentNegotiation) {
-            moshi()
-        }
 
         get("/") {
             call.respondText("Favorite Ray Wenderlich Tutorials: Navigate to /graphiql to get started.", ContentType.Text.Html)
