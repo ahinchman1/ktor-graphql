@@ -1,5 +1,6 @@
 """
-A Ray Wenderlich Tutorials, Authors and Categories
+Ray Wenderlich tutorial contain basic information such as
+title, date published, author, url, etc.
 """
 type Tutorial {
 	id: Int!
@@ -10,12 +11,18 @@ type Tutorial {
 	url: String
 }
 
+"""
+Ray Wenderlich tutorial authors.
+"""
 type Author {
 	id: Int!
 	name: String!
 	tutorials: [Int]
 }
 
+"""
+Categories associated with Ray Wenderlich's areas of expertise.
+"""
 enum Category {
       IOS_AND_KOTLIN,
       ANDROID_AND_KOTLIN,
@@ -28,18 +35,16 @@ enum Category {
 Queries
 """
 type Query {
+	"""
+	Gets all saved Ray Wenderlich tutorials.
+	"""
 	getTutorials: [Tutorial]!
+	"""
+	Gets the author associated with a particular tutorial.
+	"""
     getTutorialAuthor(tutorialId: Int!): Author
-}
-
-"""
-Mutations
-"""
-type Mutation {
-	addTutorial(input: TutorialInput): Tutorial
 }
 
 schema {
 	query: Query
-	mutation: Mutation
 }
