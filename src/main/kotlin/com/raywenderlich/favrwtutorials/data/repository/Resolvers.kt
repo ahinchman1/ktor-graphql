@@ -46,4 +46,8 @@ object Resolvers: RWRepository {
     override fun getTutorialAuthor(id: TutorialId): Author? {
         return authors.firstOrNull() { author -> author.tutorials.contains(id) }
     }
+
+    override fun getAuthors(): List<Author> {
+        return authors
+    }
 }

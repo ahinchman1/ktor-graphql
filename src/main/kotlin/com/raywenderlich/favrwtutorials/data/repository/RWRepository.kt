@@ -43,4 +43,7 @@ interface RWRepository {
     // Gets the author associated with a particular tutorial.
     fun getTutorialAuthor(id: TutorialId): Author?
 
+    // Gets all of the saved Ray Wenderlich authors.
+    fun getAuthors(): List<Author>
+
 }

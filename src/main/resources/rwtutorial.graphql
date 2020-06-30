@@ -1,5 +1,5 @@
 """
-Ray Wenderlich tutorial contain basic information such as
+Ray Wenderlich tutorial containing basic information such as
 title, date published, author, url, etc.
 """
 type Tutorial {
@@ -24,11 +24,11 @@ type Author {
 Categories associated with Ray Wenderlich's areas of expertise.
 """
 enum Category {
-      IOS_AND_KOTLIN,
-      ANDROID_AND_KOTLIN,
-      SERVER_SIDE_SWIFT,
-      UNITY,
-      FLUTTER
+	IOS_AND_SWIFT,
+	ANDROID_AND_KOTLIN,
+	SERVER_SIDE_SWIFT,
+	UNITY,
+	FLUTTER
 }
 
 """
@@ -43,6 +43,10 @@ type Query {
 	Gets the author associated with a particular tutorial.
 	"""
     getTutorialAuthor(tutorialId: Int!): Author
+	"""
+	Gets all saved Ray Wenderlich tutorials
+	"""
+	getAuthors: [Author]!
 }
 
 schema {
