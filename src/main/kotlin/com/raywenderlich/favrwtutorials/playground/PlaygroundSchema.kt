@@ -96,8 +96,6 @@ val runtimeWiring: RuntimeWiring = RuntimeWiring.newRuntimeWiring()
                 authors.firstOrNull { authorId == it.id } == null -> throw Exception("Author id does not exist. Please check to make sure the proper author id is being used.")
                 else -> Resolvers.addTutorial(id, title, yearMonthDateFormat.parse(date)!!, authorId, category, url)
             }
-
-
         }
     }.build()
 

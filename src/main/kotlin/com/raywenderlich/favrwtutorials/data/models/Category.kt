@@ -1,14 +1,14 @@
 package com.raywenderlich.favrwtutorials.data.models
 
 enum class Category {
-    IOS_AND_KOTLIN,
+    IOS_AND_SWIFT,
     ANDROID_AND_KOTLIN,
     SERVER_SIDE_SWIFT,
     UNITY,
     FLUTTER;
 
     companion object {
-        private const val IOS_AND_KOTLIN_STR = "IOS_AND_KOTLIN"
+        private const val IOS_AND_SWIFT_STR = "IOS_AND_SWIFT"
         private const val ANDROID_AND_KOTLIN_STR = "ANDROID_AND_KOTLIN"
         private const val SERVER_SIDE_SWIFT_STR = "SERVER_SIDE_SWIFT"
         private const val UNITY_STR = "UNITY"
@@ -17,7 +17,7 @@ enum class Category {
 
         fun toStorage(category: Category) : String =
             when (category) {
-                IOS_AND_KOTLIN -> IOS_AND_KOTLIN_STR
+                IOS_AND_SWIFT -> IOS_AND_SWIFT_STR
                 ANDROID_AND_KOTLIN -> ANDROID_AND_KOTLIN_STR
                 SERVER_SIDE_SWIFT -> SERVER_SIDE_SWIFT_STR
                 UNITY -> UNITY_STR
@@ -26,7 +26,7 @@ enum class Category {
 
         fun fromStorage(cat: String): Category =
             when(cat) {
-                IOS_AND_KOTLIN_STR -> IOS_AND_KOTLIN
+                IOS_AND_SWIFT_STR -> IOS_AND_SWIFT
                 ANDROID_AND_KOTLIN_STR -> ANDROID_AND_KOTLIN
                 SERVER_SIDE_SWIFT_STR -> SERVER_SIDE_SWIFT
                 UNITY_STR -> UNITY

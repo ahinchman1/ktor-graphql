@@ -63,7 +63,7 @@ private fun createTutorials() =
             title = "Routing with MapKit and Core Location",
             date = yearMonthDateFormat.parse("6/5/2020"),
             authorId = 3,
-            category = Category.IOS_AND_KOTLIN,
+            category = Category.IOS_AND_SWIFT,
             url = "https://www.raywenderlich.com/10028489-routing-with-mapkit-and-core-location"
         )
     )
