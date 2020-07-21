@@ -43,6 +43,10 @@ import mu.KotlinLogging
 
 val logger by lazy { KotlinLogging.logger { } }
 
+fun Application.module() {
+    // TODO
+}
+
 fun main() {
     val server = embeddedServer(Netty, port = 8080) {
         routing {
