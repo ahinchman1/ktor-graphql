@@ -38,6 +38,9 @@ import com.raywenderlich.favrwtutorials.data.repository.Data.authors
 import com.raywenderlich.favrwtutorials.data.repository.Data.tutorials
 import java.util.*
 
+/**
+ * Resolvers tells the server how to populate data for a request
+ */
 object Resolvers: RWRepository {
 
     override fun getTutorials(): List<Tutorial> {

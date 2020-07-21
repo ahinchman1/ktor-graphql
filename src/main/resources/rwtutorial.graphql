@@ -44,7 +44,7 @@ enum Category {
 }
 
 """
-Queries
+Entry points defined below
 """
 type Query {
 	"""
@@ -69,7 +69,7 @@ type Query {
 }
 
 """
-Mutations
+Entry points defined below
 """
 type Mutation {
 	"""
