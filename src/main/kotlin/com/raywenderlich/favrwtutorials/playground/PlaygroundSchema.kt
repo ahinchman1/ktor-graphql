@@ -65,6 +65,10 @@ val runtimeWiring: RuntimeWiring = RuntimeWiring.newRuntimeWiring()
         builder.dataFetcher("getAuthors") {
             Resolvers.getAuthors()
         }
+
+        builder.dataFetcher("getAuthorTutorials") { env ->
+            // TODO add code
+        }
     }.build()
 
 val graphQLSchema: GraphQLSchema = SchemaGenerator().makeExecutableSchema(schemaDef, runtimeWiring)
