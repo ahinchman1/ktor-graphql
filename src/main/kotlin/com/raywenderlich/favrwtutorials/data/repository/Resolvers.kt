@@ -51,22 +51,8 @@ object Resolvers: RWRepository {
         return authors.firstOrNull() { author -> author.tutorials.contains(id) }
     }
 
-    override fun addTutorial(
-        id: TutorialId,
-        title: String,
-        date: Date,
-        authorId: AuthorId,
-        category: Category,
-        url: String?
-    ): Tutorial {
-        val tut = Tutorial(
-            id = id,
-            title = title,
-            date = date,
-            authorId = id,
-            category = category,
-            url = url
-        )
+    override fun addTutorial(id: TutorialId, title: String, date: Date, authorId: AuthorId, category: Category, url: String?): Tutorial {
+        val tut = Tutorial(id, title, date, id, category, url)
         tutorials = tutorials.plus(tut)
         return tut
     }

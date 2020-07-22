@@ -45,14 +45,8 @@ interface RWRepository {
     fun getTutorialAuthor(id: TutorialId): Author?
 
     // Adds a tutorial
-    fun addTutorial(
-        id: TutorialId,
-        title: String,
-        date: Date,
-        authorId: AuthorId,
-        category: Category,
-        url: String?
-    ): Tutorial
+    fun addTutorial(id: TutorialId, title: String, date: Date, authorId: AuthorId, category: Category, url: String?): Tutorial
+
 
     // Gets all of the saved Ray Wenderlich authors.
     fun getAuthors(): List<Author>
